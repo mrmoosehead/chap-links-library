@@ -6252,19 +6252,25 @@ links.Timeline.parseJSONDate = function (date) {
         return date;
     }
 
-    // test for MS format.
-    // FIXME: will fail on a Number
-    var m = date.match(/\/Date\((-?\d+)([-\+]?\d{2})?(\d{2})?\)\//i);
-    if (m) {
-        var offset = m[2]
-            ? (3600000 * m[2]) // hrs offset
-            + (60000 * m[3] * (m[2] / Math.abs(m[2]))) // mins offset
-            : 0;
 
-        return new Date(
-            (1 * m[1]) // ticks
-                + offset
-        );
+    //test for MS format. 
+    if (typeof date == "string" || (typeof date == "object" && date.constructor === String)) //check for string and String
+    {
+        var m = date.match(/\/Date\((-?\d+)([-\+]?\d{2})?(\d{2})?\)\//i);
+
+        if (m)
+        {
+            var offset = m[2]
+                        ? (3600000 * m[2]) //hrs offset
+                            + (60000 * m[3] * (m[2] / Math.abs(m[2]))) //mins offset
+                        : 0;
+
+            return new Date(
+                            (1 * m[1]) //ticks  
+                            + offset
+
+                        );
+        }
     }
 
     // failing that, try to parse whatever we've got.
